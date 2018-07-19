@@ -9,10 +9,6 @@ This is an extra theme for [lightdm-webkit2-greeter](http://github.com/Antergos/
 ### Screenshots
 <center>
 <img src="img/screenshot1.jpg" alt="screenshot1" />
-<hr/>
-<img src="img/screenshot2.jpg" alt="screenshot2" />
-<hr/>
-<img src="img/screenshot3.jpg" alt="screenshot3" />
 </center>
 
 ### Prerequisites
