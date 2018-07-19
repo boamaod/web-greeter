@@ -1,6 +1,6 @@
 [theme]
-name=Antergos
-description=Antergos Theme
+name=Home Taping
+description=Login without bling
 engine=lightdm-webkit2-greeter
 url=index.html
-session=cinnamon
+session=Lubuntu

@@ -1,10 +1,10 @@
-# lightdm-webkit-theme-antergos
+# lightdm-webkit-theme-home-taping
 
 
 
 ### Overview
 
-This is the default theme included with [lightdm-webkit2-greeter](http://github.com/Antergos/lightdm-webkit2-greeter). If you are using the Webkit2 greeter, you already have this theme.
+This is an extra theme for [lightdm-webkit2-greeter](http://github.com/Antergos/lightdm-webkit2-greeter), which is basically just simplified Antergos theme without background switcher. If you want to use this theme in Webkit2 greeter, clone the repository and merge to use the modified [theme properties](https://github.com/boamaod/web-greeter/blob/stable/data/lightdm-webkit2-greeter.conf).
 
 ### Screenshots
 <center>
@@ -19,7 +19,7 @@ This is the default theme included with [lightdm-webkit2-greeter](http://github.
 * lightdm-webkit2-greeter
 
 ### Installation
-This theme is included with `lightdm-webkit2-greeter` which is installed by default for Antergos users. Non-Antergos users should see [lightdm-webkit2-greeter](https://github.com/Antergos/lightdm-webkit2-greeter/) for installation details.
+This theme is a fork of `lightdm-webkit2-greeter` Antergos theme which is installed by default for Antergos users. Non-Antergos users should see [lightdm-webkit2-greeter](https://github.com/Antergos/lightdm-webkit2-greeter/) for installation details.
 
 ### User Icons Management
 
