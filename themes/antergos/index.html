@@ -59,33 +59,6 @@
 
 <body>
 
-<!-- BG Switcher -->
-<a id="bg-switch-toggle" href="#" class="btn btn-primary btn-lg toggle close_wallpapers">
-	<i class="fa fa-bars"></i>
-</a>
-
-<div id="bg-switch-wrapper">
-	<div class="bg-switch-container">
-		<a id="bg-switch-close" href="#" class="btn btn-default btn-lg pull-right toggle close_wallpapers">
-			<i class="fa fa-times"></i>
-		</a>
-
-		<div class="bg-switch">
-			<h3 data-i18n="background_options">${i18n}</h3>
-			<div class="clearfix"></div>
-			<div class="bgs">
-				<a href="#" data-img="random" class="bg clearfix">
-					<div class="random">
-						<span data-i18n="random">${i18n}</span>
-					</div>
-				</a>
-				<!--Background thumbnails will be added here dynamically -->
-			</div>
-		</div>
-	</div>
-</div>
-<!-- /BG Switcher Sidebar -->
-
 <!-- Full Page Image Header Area -->
 <div id="top" class="header">
 	<div class="login-wrapper">
@@ -224,22 +197,8 @@
 	</div>
 </div>
 
-<!-- Custom JavaScript for the BG Switcher & Clock Toggle -->
+<!-- Custom JavaScript for Clock Toggle -->
 <script>
-	// TODO: Move this stuff into greeter.js
-	$('#bg-switch-wrapper').on('transitionend', function() {
-		if ( $(this).hasClass('active') ) {
-			$('#bg-switch-toggle').hide(0);
-			$('#bg-switch-close').show(0);
-		} else {
-			$('#bg-switch-close').hide(100);
-			$('#bg-switch-toggle').show(100);
-		}
-	});
-	$( "#bg-switch-close, #bg-switch-toggle" ).click( function( e ) {
-		e.preventDefault();
-		$('#bg-switch-wrapper').toggleClass( "active" );
-	} );
 
 	$( '#collapseTwo' ).on( 'shown.bs.collapse', function() {
 		$( '#collapseTwo a' ).filter( ':not(.dropdown-menu *)' ).each( function( index ) {

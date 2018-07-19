@@ -182,31 +182,21 @@ class AntergosThemeUtils {
 	 * Get some values from `lightdm-webkit2-greeter.conf` and save them for later.
 	 */
 	init_config_values() {
-		var logo, user_image, debug, background_images, background_images_dir;
+		var logo, user_image, debug, background_image;
 
 		if ( 'undefined' !== typeof( config ) ) {
 
-			logo = config.get_str( 'branding', 'logo' ) || 'img/antergos.png';
-			user_image = config.get_str( 'branding', 'user_image' ) || 'img/antergos-logo-user.png';
-			background_images_dir = config.get_str( 'branding', 'background_images' ) || '/usr/share/backgrounds';
+			logo = config.get_str( 'branding', 'logo' ) || 'img/panel-header-icon.svg';
+			user_image = config.get_str( 'branding', 'user_image' ) || 'img/user-icon.svg';
+			background_image = config.get_str( 'branding', 'background_image' ) || 'img/background.jpg';
 			debug = config.get_bool( 'greeter', 'debug_mode' ) || false;
-
-			if ( background_images_dir ) {
-				background_images = greeterutil.dirlist( background_images_dir ) || [];
-				_util.log(background_images);
-			}
-
-			if ( background_images && background_images.length ) {
-				background_images = this.find_images( background_images );
-			}
 
 		}
 
 		this.logo = logo;
 		this.debug = debug;
 		this.user_image = user_image;
-		this.background_images = background_images;
-		this.background_images_dir = background_images_dir;
+		this.background_image = background_image;
 	}
 
 	is_not_empty( value ) {
@@ -214,202 +204,7 @@ class AntergosThemeUtils {
 		return empty_values.findIndex(v => v === value) === -1;
 	}
 
-
-	find_images( dirlist ) {
-		var images = [],
-			subdirs = [];
-
-		for ( var file of dirlist ) {
-			if ( file.match( /(png|PNG)|(jpg|JPEG)|(bmp|BMP)/ ) ) {
-				images.push( file );
-			} else if ( ! file.match( /\w+\.\w+/ ) ) {
-				subdirs.push( file )
-			}
-		}
-
-		if ( subdirs.length && ! images.length && this.recursion < 3 ) {
-			this.recursion++;
-			for ( var dir of subdirs ) {
-				var list = greeterutil.dirlist( dir );
-
-				if ( list && list.length ) {
-					images.push.apply( images, this.find_images( list ) );
-				}
-			}
-		}
-
-		return images;
-	}
 }
-
-
-
-
-
-/**
- * This class handles the theme's background switcher.
- */
-class AntergosBackgroundManager {
-
-	constructor() {
-		if ( null !== _bg_self ) {
-			return _bg_self;
-		}
-
-		_bg_self = this;
-
-		this.current_background = _util.cache_get( 'background_manager', 'current_background' );
-
-		if ( ! _util.background_images_dir || ! _util.background_images || ! _util.background_images.length ) {
-			_util.log( 'AntergosBackgroundManager: [ERROR] No background images detected.' );
-
-			$( '.header' ).fadeTo( 300, 0.5, function() {
-				$( '.header' ).css( "background-image", 'url(img/fallback_bg.jpg)' );
-			} ).fadeTo( 300, 1 );
-
-		}
-
-		return _bg_self;
-	}
-
-
-	/**
-	 * Determine which background image should be displayed and apply it.
-	 */
-	initialize( deferred ) {
-		if ( ! _bg_self.current_background && 'localStorage' === _util.cache_backend ) {
-			// For backwards compatibility
-			if ( null !== localStorage.getItem( 'bgsaved' ) && '0' === localStorage.getItem( 'bgrandom' ) ) {
-				_bg_self.current_background = localStorage.getItem( 'bgsaved' );
-				_util.cache_set( _bg_self.current_background, 'background_manager', 'current_background' );
-				localStorage.removeItem( 'bgrandom' );
-				localStorage.removeItem( 'bgsaved' );
-			} else {
-				if ( '1' === localStorage.getItem( 'bgrandom' ) ) {
-					_bg_self.current_background = _bg_self.get_random_image();
-					_util.cache_set( 'true', 'background_manager', 'random_background' );
-					localStorage.removeItem( 'bgrandom' );
-				}
-			}
-		}
-
-		if ( ! _bg_self.current_background ) {
-			// For current and future versions
-			let current_background = _util.cache_get( 'background_manager', 'current_background' ),
-				random_background = _util.cache_get( 'background_manager', 'random_background' );
-
-			if ( 'true' === random_background || ! current_background ) {
-				current_background = _bg_self.get_random_image();
-				_util.cache_set( 'true', 'background_manager', 'random_background' );
-			}
-
-			_bg_self.current_background = current_background;
-			_util.cache_set( _bg_self.current_background, 'background_manager', 'current_background' );
-		}
-
-		_bg_self.do_background(deferred);
-	}
-
-
-	/**
-	 * Set the background image to the value of `this.current_background`
-	 */
-	do_background( deferred = null ) {
-		let bg = _bg_self.current_background,
-			tpl = (bg.indexOf('url(') > -1) ? bg : `url(${_bg_self.current_background})`;
-
-		$( '.header' ).css( "background-image", tpl );
-
-		if (null !== deferred) {
-			deferred.resolve();
-		}
-	}
-
-
-	/**
-	 * Get a random background image from our images array.
-	 *
-	 * @returns str The absolute path to a background image.
-	 */
-	get_random_image() {
-		var random_bg;
-
-		random_bg = Math.floor( Math.random() * _util.background_images.length );
-
-		return _util.background_images[ random_bg ];
-	}
-
-
-	/**
-	 * Setup the background switcher widget.
-	 */
-	setup_background_thumbnails() {
-		if ( _util.background_images && _util.background_images.length ) {
-			var old_bg_tpl = `url(${this.current_background})`;
-
-			/* TODO: Implement some form of pagination
-			 */
-			if ( _util.background_images.length > 20 ) {
-				_util.background_images = _util.background_images.splice(0, 20);
-			}
-
-			$('[data-img="random"]').click(this.background_selected_handler);
-
-			for ( var image_file of _util.background_images ) {
-				var $link = $( '<a href="#"><div>' ),
-					$img_el = $link.children( 'div' ),
-					img_url_tpl = `url(file://${image_file})`;
-
-				$link.addClass( 'bg clearfix' ).attr( 'data-img', img_url_tpl );
-
-				if ( image_file === this.current_background || image_file === old_bg_tpl ) {
-					var is_random = _util.cache_get( 'background_manager', 'random_background' );
-					if ('true' !== is_random ) {
-						$link.addClass( 'active' );
-					} else if ( 'true' === is_random ) {
-						$('[data-img="random"]').addClass('active');
-					}
-				}
-
-				$img_el.css( 'background-image', img_url_tpl );
-
-				$link.appendTo( $( '.bgs' ) ).click( this.background_selected_handler );
-			}
-
-			if ( ! $('.bg.active').length ) {
-				$('[data-img="random"]').addClass('active');
-			}
-		}
-	}
-
-
-	/**
-	 * Handle background image selected event.
-	 *
-	 * @param event jQuery event object.
-	 */
-	background_selected_handler( event ) {
-		var img = $( this ).attr( 'data-img' );
-
-		$('.bg.active').removeClass('active');
-		$(this).addClass('active');
-
-		if ( 'random' === img ) {
-			_util.cache_set( 'true', 'background_manager', 'random_background' );
-			img = _bg_self.get_random_image();
-		} else {
-			_util.cache_set( 'false', 'background_manager', 'random_background' );
-		}
-
-		_util.cache_set( img, 'background_manager', 'current_background' );
-		_bg_self.current_background = img;
-
-		_bg_self.do_background();
-
-	}
-}
-
-
 
 
 
@@ -424,7 +219,7 @@ class AntergosTheme {
 		}
 		_self = this;
 
-		this.tux = 'img/antergos-logo-user.png';
+		this.tux = 'img/user-icon.svg';
 		this.user_list_visible = false;
 		this.auth_pending = false;
 		this.selected_user = null;
@@ -436,11 +231,7 @@ class AntergosTheme {
 		this.$msg_area_container = $( '#statusArea' );
 		this.$alert_msg_tpl = this.$msg_area_container.children('.alert-dismissible').clone();
 
-		this.background_manager = new AntergosBackgroundManager();
-
-		let init_bg = $.Deferred(this.background_manager.initialize);
-
-		init_bg.then(() => this.initialize());
+		this.initialize();
 
 		return _self;
 	}
@@ -450,6 +241,7 @@ class AntergosTheme {
 	 * Initialize the theme.
 	 */
 	initialize() {
+		this.initialize_background();
 		this.prepare_translations();
 		this.do_static_translations();
 		this.initialize_clock();
@@ -461,7 +253,6 @@ class AntergosTheme {
 		this.prepare_user_list();
 		this.prepare_session_list();
 		this.register_callbacks();
-		this.background_manager.setup_background_thumbnails();
 	}
 
 
@@ -595,6 +386,15 @@ class AntergosTheme {
 		}, 60000 );
 	}
 
+	/**
+	 * Initialize background.
+	 */
+	initialize_background() {
+		let bg = _util.background_image, tpl = (bg.indexOf('url(') > -1) ? bg : `url(${bg})`;
+
+		$( '.header' ).css( "background-image", tpl );
+	}
+
 
 	/**
 	 * Show the user list if its not already shown. This is used to allow the user to
@@ -620,7 +420,7 @@ class AntergosTheme {
 
 	prepare_login_panel_header() {
 		var greeting = (_util.translations.greeting) ? _util.translations.greeting : 'Welcome!',
-			logo = ( '' !== _util.logo ) ? _util.logo : 'img/antergos.png';
+			logo = ( '' !== _util.logo ) ? _util.logo : 'img/panel-header-icon.svg';
 
 		$( '.welcome' ).text( greeting );
 		$( '#hostname' ).append( lightdm.hostname );
@@ -758,9 +558,7 @@ class AntergosTheme {
 
 		if ( lightdm.is_authenticated ) {
 			// The user entered the correct password. Let's log them in.
-			$( 'body' ).fadeOut( 1000, () => {
-				lightdm.login( lightdm.authentication_user, selected_session );
-			} );
+			lightdm.login( lightdm.authentication_user, selected_session );
 		} else {
 			// The user did not enter the correct password. Show error message.
 			_self.show_message(err_msg, 'error');
@@ -816,9 +614,7 @@ class AntergosTheme {
 
 		$modal.find( '.btn-primary' ).text( _util.translations[ action ] ).click( action, ( event ) => {
 			$( this ).off( 'click' );
-			$( 'body' ).fadeOut( 1000, () => {
-				lightdm[event.data]();
-			});
+			lightdm[event.data]();
 		} );
 		$modal.find( '.btn-default' ).click( () => {
 			$( this ).next().off( 'click' );

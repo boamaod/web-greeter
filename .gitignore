@@ -8,6 +8,7 @@ cmake-build-debug
 CMakeLists.txt
 /ChangeLog
 /AUTHORS
+src/gresource/js/bundle.js
 ### ArchLinuxPackages template
 *.tar
 *.tar.*

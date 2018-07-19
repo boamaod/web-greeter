@@ -56,9 +56,8 @@ class GreeterConfig  {
 	 * Holds keys/values from the `branding` section of the config file.
 	 *
 	 * @type {object} branding
-	 * @prop {string} background_images Path to directory that contains background images
-	 *                                  for use in greeter themes.
-	 * @prop {string} logo              Path to distro logo image for use in greeter themes.
+	 * @prop {string} background_image  Path to background image
+	 * @prop {string} logo              Path to distro logo image
 	 * @prop {string} user_image        Default user image/avatar. This is used by greeter themes
 	 *                                  for users that have not configured a `.face` image.
 	 * @readonly
@@ -67,9 +66,9 @@ class GreeterConfig  {
 		if ( null === _branding ) {
 			let theme_dir = '/usr/share/lightdm-webkit/themes/antergos',
 				props = {
-					'background_images': '/usr/share/backgrounds',
-					'logo': `${theme_dir}/img/antergos-logo-user.png`,
-					'user_image': `${theme_dir}/img/antergos.png`
+					'background_image': `${theme_dir}/img/background.jpg`,
+					'logo': `${theme_dir}/img/panel-header-icon.svg,
+					'user_image': `${theme_dir}/img/user-icon.svg`
 			};
 
 			_branding = {};

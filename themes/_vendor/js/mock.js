@@ -960,9 +960,9 @@ new LightDMGreeter();
 
  config.get_str = function (section, key) {
  var branding = {
- logo: 'img/antergos.png',
- user_logo: 'ing/antergos-logo-user.png',
- background_images: '/usr/share/antergos/wallpapers'
+ logo: 'img/panel-header-icon.svg',
+ user_logo: 'img/user-icon.svg',
+ background_image: 'img/background.png'
  };
  if ('branding' === section) {
  return branding[key];
@@ -972,12 +972,6 @@ new LightDMGreeter();
  return true;
  };
 
-
- greeterutil.dirlist = function (directory) {
- if ('/usr/share/antergos/wallpapers' === directory) {
- return ['/usr/share/antergos/wallpapers/83II_by_bo0xVn.jpg', '/usr/share/antergos/wallpapers/antergos-wallpaper.png', '/usr/share/antergos/wallpapers/as_time_goes_by____by_moskanon-d5dgvt8.jpg', '/usr/share/antergos/wallpapers/autumn_hike___plant_details_by_aoiban-d5l7y83.jpg', '/usr/share/antergos/wallpapers/blossom_by_snipes2.jpg', '/usr/share/antergos/wallpapers/c65sk3mshowxrtlljbvh.jpg', '/usr/share/antergos/wallpapers/early_morning_by_kylekc.jpg', '/usr/share/antergos/wallpapers/extinction_by_signcropstealer-d5j4y84.jpg', '/usr/share/antergos/wallpapers/field_by_stevenfields-d59ap2i.jpg', '/usr/share/antergos/wallpapers/Grass_by_masha_darkelf666.jpg', '/usr/share/antergos/wallpapers/Grass_Fullscreen.jpg', '/usr/share/antergos/wallpapers/humble_by_splendidofsun-d5g47hb.jpg', '/usr/share/antergos/wallpapers/In_the_Grass.jpg', '/usr/share/antergos/wallpapers/morning_light.jpg', '/usr/share/antergos/wallpapers/Nautilus_Fullscreen.jpg', '/usr/share/antergos/wallpapers/nikon_d40.jpg', '/usr/share/antergos/wallpapers/sky_full_of_stars.jpg', '/usr/share/antergos/wallpapers/solely_by_stevenfields.jpg', '/usr/share/antergos/wallpapers/the_world_inside_my_lens__by_moskanon-d5fsiqs.jpg', '/usr/share/antergos/wallpapers/white_line_by_snipes2.jpg']
- }
- }
  }
 
  function _lightdm_mock_check_argument_length(args, length) {

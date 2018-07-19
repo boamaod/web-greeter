@@ -103,7 +103,7 @@ static gboolean
 	SESSION_STARTING;
 
 static gchar
-	*background_images_dir,
+	*background_image,
 	*user_image,
 	*logo;
 
@@ -2001,14 +2001,14 @@ webkit_web_extension_initialize(WebKitWebExtension *extension) {
 
 	paths = g_slist_prepend(paths, THEME_DIR);
 
-	background_images_dir = get_config_option_as_string("branding", "background_images");
-	paths = g_slist_prepend(paths, background_images_dir);
+	logo = get_config_option_as_string("branding", "logo");
+	paths = g_slist_prepend(paths, logo);
+
+	background_image = get_config_option_as_string("branding", "background_image");
+	paths = g_slist_prepend(paths, background_image);
 
 	user_image = get_config_option_as_string("branding", "user_image");
 	paths = g_slist_prepend(paths, user_image);
-
-	logo = get_config_option_as_string("branding", "logo");
-	paths = g_slist_prepend(paths, logo);
 
 	g_signal_connect(
 		G_OBJECT(greeter),
